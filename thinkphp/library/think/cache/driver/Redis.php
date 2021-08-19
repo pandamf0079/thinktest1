@@ -12,7 +12,7 @@
 namespace think\cache\driver;
 
 use think\cache\Driver;
-use PredisClient;
+
 /**
  * Redis缓存驱动，适合单机部署、有前端代理实现高可用的场景，性能最好
  * 有需要在业务层实现读写分离、或者使用RedisCluster的需求，请使用Redisd驱动
@@ -39,20 +39,14 @@ class Redis extends Driver
      * @access public
      */
     public function __construct($options = [])
-    {	
+    {
         if (!extension_loaded('redis')) {
             throw new \BadFunctionCallException('not support: redis');
         }
         if (!empty($options)) {
             $this->options = array_merge($this->options, $options);
         }
-		if(config('cache.cluster_list')){
-			$servers = config('cache.cluster_list');
-			$this->handler = Client($servers, array('cluster' => 'redis'));
-		}else{
-			$this->handler = new \Redis;	
-		}
-        
+        $this->handler = new \Redis;
         if ($this->options['persistent']) {
             $this->handler->pconnect($this->options['host'], $this->options['port'], $this->options['timeout'], 'persistent_id_' . $this->options['select']);
         } else {
