@@ -37,7 +37,7 @@ class Redis extends SessionHandler
 		$this->config['password'] = config('session.password')? config('session.password') : '';
 		$this->config['session_name'] = config('session.prefix')? config('session.prefix') : '';
 		
-		print_r($this->config);
+		//print_r($this->config);
     }
 
     /**
