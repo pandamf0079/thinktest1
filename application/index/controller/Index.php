@@ -21,9 +21,9 @@ class Index  extends \think\Controller
 		$redis->rpush('send_email_queue', json_encode($arr));
 		echo $redis->rpop('send_email_queue');
 		*/
-		static $REDIS_REMOTE_HT_KEY         = "product_%s";     //共享信息key
-    	static $REDIS_REMOTE_TOTAL_COUNT    = "total_count";    //商品总库存
-    	static $REDIS_REMOTE_USE_COUNT      = "used_count";     //已售库存
+		$REDIS_REMOTE_HT_KEY         = "product_%s";     //共享信息key
+    	$REDIS_REMOTE_TOTAL_COUNT    = "total_count";    //商品总库存
+    	$REDIS_REMOTE_USE_COUNT      = "used_count";     //已售库存
 	
 		$script = <<<eof
             local key = KEYS[1]
@@ -37,7 +37,7 @@ class Index  extends \think\Controller
             return 0
 eof;
 		$redis = new Redis();
-        echo $redis->evals($script,[self::$REDIS_REMOTE_HT_KEY,  self::$REDIS_REMOTE_TOTAL_COUNT, self::$REDIS_REMOTE_USE_COUNT] , 3);
+        echo $redis->evals($script,[$REDIS_REMOTE_HT_KEY, $REDIS_REMOTE_TOTAL_COUNT, $REDIS_REMOTE_USE_COUNT] , 3);
 		
 		
 		
