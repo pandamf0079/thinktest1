@@ -182,7 +182,7 @@ class Redis extends Driver
 	 */
 	 
 	public function  evals($script,$keys="",$numkeys){
-		$keys = strval($keys);
+		$keys = json_encode($keys);
 		$result= $this->handler->eval($script,$keys,$numkeys);
 		return $result;
 	}
