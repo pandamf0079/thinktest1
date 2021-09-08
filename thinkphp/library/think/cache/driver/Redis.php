@@ -12,7 +12,7 @@
 namespace think\cache\driver;
 
 use think\cache\Driver;
-
+use Predis;
 /**
  * Redis缓存驱动，适合单机部署、有前端代理实现高可用的场景，性能最好
  * 有需要在业务层实现读写分离、或者使用RedisCluster的需求，请使用Redisd驱动
@@ -39,27 +39,35 @@ class Redis extends Driver
      * @access public
      */
     public function __construct($options = [])
-    {
+    {	
         if (!extension_loaded('redis')) {
             throw new \BadFunctionCallException('not support: redis');
         }
         if (!empty($options)) {
             $this->options = array_merge($this->options, $options);
         }
-        $this->handler = new \Redis;
-        if ($this->options['persistent']) {
-            $this->handler->pconnect($this->options['host'], $this->options['port'], $this->options['timeout'], 'persistent_id_' . $this->options['select']);
-        } else {
-            $this->handler->connect($this->options['host'], $this->options['port'], $this->options['timeout']);
-        }
-
-        if ('' != $this->options['password']) {
-            $this->handler->auth($this->options['password']);
-        }
-
-        if (0 != $this->options['select']) {
-            $this->handler->select($this->options['select']);
-        }
+		
+		if(config('cluster_list')){
+			$servers = config('cluster_list');
+			$this->handler = new Predis\Client($servers, array('cluster' => 'redis','parameters'=>array('password'=>'Rd86cv2')));
+		}else{
+			$this->handler = new \Redis;
+			if ($this->options['persistent']) {
+				$this->handler->pconnect($this->options['host'], $this->options['port'], $this->options['timeout'], 'persistent_id_' . $this->options['select']);
+			} else {
+				$this->handler->connect($this->options['host'], $this->options['port'], $this->options['timeout']);
+			}
+	
+			if ('' != $this->options['password']) {
+				$this->handler->auth($this->options['password']);
+			}
+	
+			if (0 != $this->options['select']) {
+				$this->handler->select($this->options['select']);
+			}	
+		}
+		
+        
     }
 
     /**
@@ -125,7 +133,65 @@ class Redis extends Driver
         isset($first) && $this->setTagItem($key);
         return $result;
     }
-
+	
+	/*
+	 *左插入缓存队列
+	 * @param string            $name 缓存变量名
+     * @param mixed             $value  存储数据
+     * @return boolean 
+	*/
+	
+	public function lpush($name, $value){
+		$key = $this->getCacheKey($name);
+		$result= $this->handler->lpush($key, json_encode($value));
+		return $result;
+		
+	}
+	
+	/*
+	 * 由列表尾部添加字符串值。如果不存在该键则创建该列表。如果该键存在，而且不是一个列表，返回FALSE
+	 * @param string            $name 缓存变量名
+     * @param mixed             $value  存储数据
+     * @return boolean 
+	*/
+	
+	public function rpush($name, $value){
+		$key = $this->getCacheKey($name);
+		$result= $this->handler->rpush($key, json_encode($value));
+		return $result;
+		
+	}
+	
+	/*
+	 *返回和移除列表的第一个元素
+	 *@return mixed
+	 */
+	public function lpop($name){
+		$value = $this->handler->lpop($this->getCacheKey($name));
+		if($value!=false){
+			return $value;
+		}else{
+			return false;
+		}
+		
+	}
+	
+	
+	/*
+	 *返回和移除列表的最后一个元素
+	 *@return mixed
+	 */
+	public function rpop($name){
+		$value = $this->handler->rpop($this->getCacheKey($name));
+		if($value!=false){
+			return $value;
+		}else{
+			return false;
+		}
+		
+	}
+	
+	
     /**
      * 自增缓存（针对数值缓存）
      * @access public
