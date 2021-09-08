@@ -2,19 +2,24 @@
 namespace app\index\controller;
 use think\Session;
 use think\Request;
+use think\cache\driver\Redis;
 //use Predis;
 class Index  extends \think\Controller
 {
     public function index()
     {	
 	
-	
+		
 		/*
 		$servers = config('cache.cluster_list');
 		$a= new Predis\Client($servers, array('cluster' => 'redis'));
 		$a->set("name9", "2222222222222");
 		$a->get("name9");
 		*/
+		$redis = new Redis();
+        $arr = array(rand(1,10),time());
+		$redis->rpush('send_email_queue', json_encode($arr));
+		echo $redis->rpop('send_email_queue');
 		
         return $this->fetch();
     }
