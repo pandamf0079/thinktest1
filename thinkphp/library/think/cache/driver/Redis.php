@@ -178,6 +178,16 @@ class Redis extends Driver
 	
 	
 	/*
+	 *运行脚本
+	 */
+	 
+	public function  evals($script,$keys=[],$numkeys){ 
+		$result= $this->handler->eval($script,$keys,$numkeys);
+		return $result
+	}
+	 
+	
+	/*
 	 *返回和移除列表的最后一个元素
 	 *@return mixed
 	 */

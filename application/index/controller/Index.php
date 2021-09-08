@@ -15,11 +15,32 @@ class Index  extends \think\Controller
 		$a= new Predis\Client($servers, array('cluster' => 'redis'));
 		$a->set("name9", "2222222222222");
 		$a->get("name9");
-		*/
+		
 		$redis = new Redis();
         $arr = array(rand(1,10),time());
 		$redis->rpush('send_email_queue', json_encode($arr));
 		echo $redis->rpop('send_email_queue');
+		*/
+		static $REDIS_REMOTE_HT_KEY         = "product_%s";     //共享信息key
+    	static $REDIS_REMOTE_TOTAL_COUNT    = "total_count";    //商品总库存
+    	static $REDIS_REMOTE_USE_COUNT      = "used_count";     //已售库存
+	
+		$script = <<<eof
+            local key = KEYS[1]
+            local field1 = KEYS[2]
+            local field2 = KEYS[3]
+            local field1_val = redis.call('hget', key, field1)
+            local field2_val = redis.call('hget', key, field2)
+            if(field1_val>field2_val) then
+                return redis.call('HINCRBY', key, field2,1)
+            end
+            return 0
+eof;
+		$redis = new Redis();
+        echo $redis->evals($script,[self::$REDIS_REMOTE_HT_KEY,  self::$REDIS_REMOTE_TOTAL_COUNT, self::$REDIS_REMOTE_USE_COUNT] , 3);
+		
+		
+		
 		
         return $this->fetch();
     }
