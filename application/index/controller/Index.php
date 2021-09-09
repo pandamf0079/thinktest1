@@ -37,7 +37,7 @@ class Index  extends \think\Controller
             return 0
 eof;
 		$redis = new Redis();
-        echo $redis->evals($script,array($REDIS_REMOTE_HT_KEY,$REDIS_REMOTE_TOTAL_COUNT,$REDIS_REMOTE_USE_COUNT),array(),3);
+        echo $redis->evals($script,array($REDIS_REMOTE_HT_KEY,$REDIS_REMOTE_TOTAL_COUNT,$REDIS_REMOTE_USE_COUNT),3);
 		
 		
 		

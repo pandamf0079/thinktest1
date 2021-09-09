@@ -181,10 +181,10 @@ class Redis extends Driver
 	 *运行脚本
 	 */
 	 
-	public function  evals($script,$keys,$arg,$numkeys){
+	public function  evals($script,$keys,$numkeys){
 		//$keys = json_encode($keys);
 
-		$result= $this->handler->eval($script,$keys,$arg,$numkeys);
+		$result= $this->handler->eval($script,$keys,$numkeys);
 		return $result;
 	}
 	 
