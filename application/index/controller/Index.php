@@ -41,7 +41,7 @@ eof;
 		$objRedis->connect('47.106.98.90',16370);
 		$objRedis->auth('Ct200h1');
 		
-        echo $objRedis->evals($script,array($REDIS_REMOTE_HT_KEY,$REDIS_REMOTE_TOTAL_COUNT,$REDIS_REMOTE_USE_COUNT),3);
+        echo $objRedis->eval($script,array($REDIS_REMOTE_HT_KEY,$REDIS_REMOTE_TOTAL_COUNT,$REDIS_REMOTE_USE_COUNT),3);
 		
 		
 		
