@@ -30,7 +30,9 @@ class Index  extends \think\Controller
             local field1 = KEYS[2]
             local field2 = KEYS[3]
             local field1_val = redis.call('hget', key, field1)
+			local field1_val = tonumber(field1_val)
             local field2_val = redis.call('hget', key, field2)
+			local field2_val = tonumber(field2_val)
             if(field1_val>field2_val) then
                 return redis.call('HINCRBY', key, field2,1)
             end
