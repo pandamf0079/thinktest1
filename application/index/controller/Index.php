@@ -21,7 +21,7 @@ class Index  extends \think\Controller
 		$redis->rpush('send_email_queue', json_encode($arr));
 		echo $redis->rpop('send_email_queue');
 		*/
-		$REDIS_REMOTE_HT_KEY         = "product_%s";     //共享信息key
+		$REDIS_REMOTE_HT_KEY         = "product";     //共享信息key
     	$REDIS_REMOTE_TOTAL_COUNT    = "total_count";    //商品总库存
     	$REDIS_REMOTE_USE_COUNT      = "used_count";     //已售库存
 	
