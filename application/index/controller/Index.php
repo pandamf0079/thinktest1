@@ -47,8 +47,9 @@ eof;
 		
 		$objRedis = new \Redis();
 		$objRedis->connect('47.106.98.90',26360);
-		$objRedis->set('tiemstamp',time());
+		$result = $objRedis->rawCommand('SENTINEL', 'masters');
 		
+		print_r($result);
 		
 		
 		
