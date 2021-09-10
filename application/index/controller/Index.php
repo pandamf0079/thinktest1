@@ -21,7 +21,7 @@ class Index  extends \think\Controller
 		$redis->rpush('send_email_queue', json_encode($arr));
 		echo $redis->rpop('send_email_queue');
 		*/
-		$REDIS_REMOTE_HT_KEY         = "product_%s";     //共享信息key
+		/*$REDIS_REMOTE_HT_KEY         = "product_%s";     //共享信息key
     	$REDIS_REMOTE_TOTAL_COUNT    = "total_count";    //商品总库存
     	$REDIS_REMOTE_USE_COUNT      = "used_count";     //已售库存
 	
@@ -43,7 +43,12 @@ eof;
 		$objRedis->connect('47.106.98.90',16370);
 		$objRedis->auth('Ct200h1');
 		
-        echo $objRedis->eval($script,array($REDIS_REMOTE_HT_KEY,$REDIS_REMOTE_TOTAL_COUNT,$REDIS_REMOTE_USE_COUNT),3);
+        echo $objRedis->eval($script,array($REDIS_REMOTE_HT_KEY,$REDIS_REMOTE_TOTAL_COUNT,$REDIS_REMOTE_USE_COUNT),3);*/
+		
+		$objRedis = new \Redis();
+		$objRedis->connect('47.106.98.90',26360);
+		$objRedis->set('tiemstamp',time());
+		
 		
 		
 		
