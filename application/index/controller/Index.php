@@ -47,7 +47,7 @@ eof;
 		
 		$objRedis = new \Redis();
 		$objRedis->connect('47.106.98.90',26360);
-		$result = $objRedis->rawCommand('SENTINEL', 'masters');
+		$result = $redis->rawCommand('SENTINEL', 'master', 'mymaster');
 		
 		echo "<pre>";
 		print_r($result);
