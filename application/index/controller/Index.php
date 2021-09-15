@@ -52,6 +52,7 @@ eof;
 		echo "<pre>";
 		print_r($result);
 		$objRedis->connect($result['0']['3'],$result['0']['5']);
+		$objRedis->auth('pp123');
 		$objRedis->set('testg','sanshang');
 		
 		
