@@ -49,8 +49,10 @@ eof;
 		$objRedis->connect('47.106.98.90',26360);
 		$result = $objRedis->rawCommand('SENTINEL', 'masters');
 		
+		echo "<pre>";
 		print_r($result);
-		
+		$objRedis->connect($result['0']['3'],$result['0']['5']);
+		$objRedis->set('testg','sanshang');
 		
 		
 		
