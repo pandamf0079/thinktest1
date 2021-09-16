@@ -51,8 +51,8 @@ eof;
 		$objRedis->connect('47.106.98.90',26360);
 		$result = $objRedis->rawCommand('SENTINEL', 'master', 'mymaster');
 		
-		echo "<pre>";
-		print_r($result);
+		//echo "<pre>";
+		//print_r($result);
 		$objRedis->connect($result['3'],$result['5']);
 		$objRedis->auth('pp123');
 		$objRedis->set('testg','sanshang');
