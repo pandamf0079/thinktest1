@@ -45,16 +45,35 @@ eof;
 		
         echo $objRedis->eval($script,array($REDIS_REMOTE_HT_KEY,$REDIS_REMOTE_TOTAL_COUNT,$REDIS_REMOTE_USE_COUNT),3);*/
 		
+		//检查本地缓存的 master ip port, 有则connect 下，失败则去轮询哨兵查询正式的主库地址，
+		
 		$objRedis = new \Redis();
 		$objRedis->connect('47.106.98.90',26360);
 		$result = $objRedis->rawCommand('SENTINEL', 'master', 'mymaster');
 		
 		echo "<pre>";
 		print_r($result);
-		$objRedis->connect($result['0']['3'],$result['0']['5']);
+		$objRedis->connect($result['3'],$result['5']);
 		$objRedis->auth('pp123');
 		$objRedis->set('testg','sanshang');
 		
+		
+		
+		/*$redis = new \Redis();
+		$redis->connect(Config::get('redisset','host'),Config::get('redisset','port'));
+		$redis->auth('pp123');
+		$res = $redis->ping();
+		if($res == '+PONG'){
+			$redis->set('testname','sanshang');
+			$redis->close();
+		}else{
+			//查询哨兵
+			$redis->connect(Config::get('redisset','soshost'),Config::get('redisset','port'));
+			$result = $redis->rawCommand('SENTINEL', 'master', 'mymaster');
+			$redis->connect($result['3'],$result['5']);
+			$redis->set('testname','sanshang');
+			$redis->close();
+		}*/
 		
 		
         return $this->fetch();
